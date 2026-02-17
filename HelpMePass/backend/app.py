@@ -107,12 +107,16 @@ def home():
                 const div = document.createElement("div");
                 div.className  = "module";
 
-                let html = `<h2>${module}</h2>`;
+                let html = `
+                <details>
+                    <summary> <h2 style="display:inline;">${module}</h2></summary>
+                `;
 
                 data[module].forEach(entry => {
                     html += `<h4> Form ${entry.paper}</h4>`;
                     html += `<pre>${entry.content}</pre>`;
                 });
+                html += `</details>`;
 
                 div.innerHTML = html;
                 resultsDiv.appendChild(div)
