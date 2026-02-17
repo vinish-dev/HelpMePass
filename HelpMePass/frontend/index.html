@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>HelpMePass</title>
+
+    <style>
+        body {
+            font-family: Arial;
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 20px;
+            background-color: #111;
+            color: #eee;
+        }
+
+        h1 {
+            color: #00ff88;
+        }
+
+        button {
+            padding: 10px 15px;
+            background: #00ff88;
+            color: black;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        button:hover {
+            opacity: 0.8;
+        }
+
+        .module {
+            margin-top: 20px;
+            padding: 15px;
+            border: 1px solid #333;
+            background-color: #1a1a1a;
+            border-radius: 8px;
+        }
+
+        pre {
+            background: #222;
+            padding: 10px;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>HelpMePass 🚀</h1>
+    <p>Upload your QPs. Let panic begin.</p>
+
+    <input type="file" id="files" multiple />
+    <br><br>
+
+    <button type="button" onclick="uploadFiles()">Help Me Pass</button>
+    <button type="button" onclick="downloadText()">Download TXT</button>
+
+    <div id="results"></div>
+
+<script>
+
+let latestData = {};
+
+async function uploadFiles() {
+    const input = document.getElementById('files');
+    const files = input.files;
+
+    const formData = new FormData();
+    for (let i = 0; i < files.length; i++) {
+        formData.append("files", files[i]);
+    }
+
+    const response = await fetch("/process", {
+        method: "POST",
+        body: formData
+    });
+
+    const data = await response.json();
+    latestData = data;
+
+    const resultsDiv = document.getElementById("results");
+    resultsDiv.innerHTML = "";
+
+    for (const module in data) {
+        const div = document.createElement("div");
+        div.className = "module";
+
+        let html = `
+            <details>
+                <summary><h2 style="display:inline;">${module}</h2></summary>
+        `;
+
+        data[module].forEach(entry => {
+            html += `<h4>From ${entry.paper}</h4>`;
+            
+            const marks = getMarksFromContent(entry.content);
+            
+            let markBadge = "";
+
+            if (marks>=8){
+                markBadge = `<span style="color:#ff4d4d; font-weight:bold;">🔥 ${marks}M </span>`;
+            }else if (marks>=6){
+                markBadge = `<span style="color:#ffaa00; font-weight:bold;">⭐ ${marks}M </span>`;
+            }else{
+                markBadge = `<span style="color:#888;"> ${marks}M</span>`;
+            }
+
+            html +=`
+                <div>
+                    ${markBadge}
+                    <pre>${entry.content}</pre>
+                </div>
+                `;
+        });
+
+        html += `</details>`;
+
+        div.innerHTML = html;
+        resultsDiv.appendChild(div);
+    }
+}
+
+function downloadText() {
+    if (!latestData || Object.keys(latestData).length === 0) {
+        alert("No data to download!");
+        return;
+    }
+
+    let textContent = "";
+
+    for (const module in latestData) {
+        textContent += "==============================\n";
+        textContent += module + "\n";
+        textContent += "==============================\n\n";
+
+        latestData[module].forEach(entry => {
+            textContent += "From " + entry.paper + "\n\n";
+            textContent += entry.content + "\n\n";
+        });
+
+        textContent += "\n\n";
+    }
+
+    const blob = new Blob([textContent], { type: "text/plain" });
+    const url = URL.createObjectURL(blob);
+
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "HelpMePass_Output.txt";
+    a.click();
+
+    URL.revokeObjectURL(url);
+}
+
+function getMarksFromContent(content) {
+    const lines = content.split("\n");
+    let maxMarks = 0;
+
+    lines.forEach(line => {
+        const match = line.trim().match(/\b(\d{1,2})\s*$/);
+        if (match) {
+            const value = parseInt(match[1]);
+            if (value > maxMarks && value <= 20) {
+                maxMarks = value;
+            }
+        }
+    });
+
+    return maxMarks;
+}
+
+
+</script>
+
+</body>
+</html>
