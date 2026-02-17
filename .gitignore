@@ -1,1 +1,35 @@
 HelpMePass/core/extractor.py
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environment
+venv/
+env/
+.venv/
+
+# Uploaded PDFs (IMPORTANT)
+uploads/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# VS Code settings
+.vscode/
+
+# FastAPI / Uvicorn reload files
+*.log
+
+# Temporary files
+*.tmp
+
+# Python build files
+build/
+dist/
+*.egg-info/
+
+# Environment variables
+.env
