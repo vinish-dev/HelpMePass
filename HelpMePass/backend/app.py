@@ -4,9 +4,13 @@ import shutil
 import os
 
 from core.extractor import extract_modules_from_pdf
-from fastapi.responses import HTMLResponse
+from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
+
+
 
 app = FastAPI()
+app.mount("/static",StaticFiles(directory="frontend"), name="static")
 
 UPLOAD_DIR = "uploads"
 os.makedirs(UPLOAD_DIR, exist_ok=True)
@@ -37,93 +41,6 @@ async def process_pdfs(files: List[UploadFile] = File(...)):
             })
     return all_modules
 
-@app.get("/", response_class=HTMLResponse)
+@app.get("/")
 def home():
-    return """<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HelpMePass</title>
-    <style>
-        body{
-            font-family: Arial, Helvetica, sans-serif;
-            max-width: 900px;
-            margin: 40px auto;
-            padding: 20px;
-        }
-
-        h1{
-            color: #222;
-        }
-
-        button{
-            padding: 10px 15px;
-            background: black;
-            color: #fff;
-            border: none;
-            cursor: pointer;
-        }
-
-        .module{
-            margin-top: 20px;
-            padding: 10px;
-            bottom: 1px solid black;
-        }
-
-    </style>
-</head>
-<body>
-    <h1>HelpMePass✅</h1>
-    <p>Upload your QPs. Let panic begin</p>
-
-    <input type="file" id="files" multiple>
-    <br><br>
-
-    <button onclick="uploadFiles()">Help Me Pass</button>
-    <div id="results"></div>
-
-    <script>
-        async function uploadFiles() {
-            const input = document.getElementById('files');
-            const files = input.files;
-
-            const formData = new FormData();
-            for (let i = 0; i < files.length; i++){
-                formData.append("files", files[i]);
-            }
-
-            const response = await fetch("/process",{
-                method: "POST",
-                body: formData
-            });
-
-            const data = await response.json();
-
-            const resultsDiv  =document.getElementById("results");
-            resultsDiv.innerHTML = "";
-
-            for(const module in data) {
-                const div = document.createElement("div");
-                div.className  = "module";
-
-                let html = `
-                <details>
-                    <summary> <h2 style="display:inline;">${module}</h2></summary>
-                `;
-
-                data[module].forEach(entry => {
-                    html += `<h4> Form ${entry.paper}</h4>`;
-                    html += `<pre>${entry.content}</pre>`;
-                });
-                html += `</details>`;
-
-                div.innerHTML = html;
-                resultsDiv.appendChild(div)
-            }
-        }
-    </script>
-
-</body>
-</html>
-"""
+    return FileResponse("frontend/index.html")
