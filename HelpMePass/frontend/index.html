@@ -57,6 +57,8 @@
     <button type="button" onclick="uploadFiles()">Help Me Pass</button>
     <button type="button" onclick="downloadText()">Download TXT</button>
 
+    <br><br>
+    <input type="text" id="searchBox" placeholder="search keyword..." onkeyup="filterResults();" style="padding:8px; width:300px;">
     <div id="results"></div>
 
 <script>
@@ -121,7 +123,7 @@ async function uploadFiles() {
         resultsDiv.appendChild(div);
     }
 }
-
+// download Text
 function downloadText() {
     if (!latestData || Object.keys(latestData).length === 0) {
         alert("No data to download!");
@@ -154,7 +156,10 @@ function downloadText() {
     URL.revokeObjectURL(url);
 }
 
+// marks detector
 function getMarksFromContent(content) {
+    if (!content) return 0;
+
     const lines = content.split("\n");
     let maxMarks = 0;
 
@@ -170,6 +175,43 @@ function getMarksFromContent(content) {
 
     return maxMarks;
 }
+
+// search function
+function escapeRegex(text) {
+    return text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+function filterResults() {
+    const keyword = document.getElementById("searchBox").value.toLowerCase();
+    const modules = document.querySelectorAll(".module");
+
+    modules.forEach(module => {
+        const preBlocks = module.querySelectorAll("pre");
+        let moduleContainsMatch = false;
+
+        preBlocks.forEach(pre => {
+            const originalText = pre.textContent;
+            const lowerText = originalText.toLowerCase();
+
+            if (keyword && lowerText.includes(keyword)) {
+                moduleContainsMatch = true;
+
+                const safeKeyword = escapeRegex(keyword);
+                const regex = new RegExp(`(${safeKeyword})`, "gi");
+
+                pre.innerHTML = originalText.replace(
+                    regex,
+                    `<span style="background:#00ff88; color:black;">$1</span>`
+                );
+            } else {
+                pre.innerHTML = originalText;
+            }
+        });
+
+        module.style.display = moduleContainsMatch || keyword === "" ? "block" : "none";
+    });
+}
+
 
 
 </script>
