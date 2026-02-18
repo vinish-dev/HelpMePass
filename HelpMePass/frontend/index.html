@@ -65,8 +65,10 @@
 
 <script>
 
+// Store API response data globally
 let latestData = {};
 
+// Upload PDFs to backend and display results
 async function uploadFiles() {
     const input = document.getElementById('files');
     const files = input.files;
@@ -125,7 +127,8 @@ async function uploadFiles() {
         resultsDiv.appendChild(div);
     }
 }
-// download Text
+
+// Download extracted content as TXT file
 function downloadText() {
     if (!latestData || Object.keys(latestData).length === 0) {
         alert("No data to download!");
@@ -158,7 +161,7 @@ function downloadText() {
     URL.revokeObjectURL(url);
 }
 
-// marks detector
+// Extract marks/score from content (looks for numbers at line end)
 function getMarksFromContent(content) {
     if (!content) return 0;
 
@@ -178,11 +181,12 @@ function getMarksFromContent(content) {
     return maxMarks;
 }
 
-
+// Escape special regex characters
 function escapeRegex(text) {
     return text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
-// search function
+
+// Search and highlight matching content
 function filterResults() {
     const keyword = document.getElementById("searchBox").value.toLowerCase();
     const modules = document.querySelectorAll(".module");
