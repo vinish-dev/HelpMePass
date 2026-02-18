@@ -5,6 +5,7 @@ from fastapi import FastAPI, UploadFile, File
 from typing import List
 import shutil
 import os
+import sys 
 
 from core.extractor import extract_modules_from_pdf
 from fastapi.responses import FileResponse
@@ -14,7 +15,14 @@ from fastapi.staticfiles import StaticFiles
 app = FastAPI()
 
 # Serve static files (frontend) from the 'frontend' directory
-app.mount("/static",StaticFiles(directory="frontend"), name="static")
+def get_frontend_dir():
+    if hasattr(sys, "_MEIPASS"):
+        return os.path.join(sys._MEIPASS, "frontend")
+    return "frontend"
+
+frontend_dir = get_frontend_dir()
+
+app.mount("/static", StaticFiles(directory=frontend_dir), name="static")
 
 # Directory where uploaded PDF files are temporarily stored
 UPLOAD_DIR = "uploads"
@@ -54,6 +62,13 @@ async def process_pdfs(files: List[UploadFile] = File(...)):
     
     return all_modules
 
+def get_frontend_path():
+    if hasattr(sys, "_MEIPASS"):
+        return os.path.join(sys._MEIPASS, "frontend", "index.html")
+    return os.path.join("frontend", "index.html")
+    
+
 @app.get("/")
 def home():
-    return FileResponse("frontend/index.html")
+    return FileResponse(os.path.join(frontend_dir, "index.html"))
+

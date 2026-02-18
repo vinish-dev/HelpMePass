@@ -1,241 +1,58 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
-    <title>HelpMePass</title>
-
-    <style>
-        body {
-            font-family: Arial;
-            max-width: 900px;
-            margin: 40px auto;
-            padding: 20px;
-            background-color: #111;
-            color: #eee;
-        }
-
-        h1 {
-            color: #00ff88;
-        }
-
-        button {
-            padding: 10px 15px;
-            background: #00ff88;
-            color: black;
-            border: none;
-            cursor: pointer;
-            font-weight: bold;
-        }
-
-        button:hover {
-            opacity: 0.8;
-        }
-
-        .module {
-            margin-top: 20px;
-            padding: 15px;
-            border: 1px solid #333;
-            background-color: #1a1a1a;
-            border-radius: 8px;
-        }
-
-        pre {
-            background: #222;
-            padding: 10px;
-            overflow-x: auto;
-        }
-    </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HelpMePass </title>
+    <link rel="stylesheet" href="/static/style.css">
 </head>
 
 <body>
 
-    <h1>HelpMePass 🚀</h1>
-    <p>Upload your QPs. Let panic begin.</p>
+    <div class="container">
+        <header>
+            <h1>HelpMePass </h1>
+            <p class="subtitle">Upload your Question Papers. Let the panic begin.</p>
+        </header>
 
-    <input type="file" id="files" multiple />
-    <br><br>
-
-    <button type="button" onclick="uploadFiles()">Help Me Pass</button>
-    <button type="button" onclick="downloadText()">Download TXT</button>
-
-    <br><br>
-    <input type="text" id="searchBox" placeholder="search keyword..." onkeyup="filterResults();" style="padding:8px; width:300px;">
-
-    <p id="matchCount" style="margin-top:10px; font-weight: bold;"></p>
-    <div id="results"></div>
-
-<script>
-
-// Store API response data globally
-let latestData = {};
-
-// Upload PDFs to backend and display results
-async function uploadFiles() {
-    const input = document.getElementById('files');
-    const files = input.files;
-
-    const formData = new FormData();
-    for (let i = 0; i < files.length; i++) {
-        formData.append("files", files[i]);
-    }
-
-    const response = await fetch("/process", {
-        method: "POST",
-        body: formData
-    });
-
-    const data = await response.json();
-    latestData = data;
-
-    const resultsDiv = document.getElementById("results");
-    resultsDiv.innerHTML = "";
-
-    for (const module in data) {
-        const div = document.createElement("div");
-        div.className = "module";
-
-        let html = `
-            <details>
-                <summary><h2 style="display:inline;">${module}</h2></summary>
-        `;
-
-        data[module].forEach(entry => {
-            html += `<h4>From ${entry.paper}</h4>`;
-            
-            const marks = getMarksFromContent(entry.content);
-            
-            let markBadge = "";
-
-            if (marks>=8){
-                markBadge = `<span style="color:#ff4d4d; font-weight:bold;">🔥 ${marks}M </span>`;
-            }else if (marks>=6){
-                markBadge = `<span style="color:#ffaa00; font-weight:bold;">⭐ ${marks}M </span>`;
-            }else{
-                markBadge = `<span style="color:#888;"> ${marks}M</span>`;
-            }
-
-            html +=`
-                <div>
-                    ${markBadge}
-                    <pre>${entry.content}</pre>
+        <div class="controls">
+            <!-- File Upload Area -->
+            <div class="file-upload-wrapper" onclick="document.getElementById('files').click()">
+                <input type="file" id="files" multiple accept=".pdf" />
+                <div class="upload-text">
+                    > INITIATE UPLOAD SEQUENCE (CLICK OR DRAG)
                 </div>
-                `;
-        });
+            </div>
 
-        html += `</details>`;
+            <!-- Action Buttons -->
+            <div class="button-group">
+                <button type="button" onclick="uploadFiles()">
+                    EXECUTE
+                </button>
+                <button type="button" class="secondary" onclick="downloadText()">
+                    EXPORT_LOGS
+                </button>
+            </div>
 
-        div.innerHTML = html;
-        resultsDiv.appendChild(div);
-    }
-}
+            <!-- Search -->
+            <div class="search-container">
+                <input type="text" id="searchBox" placeholder="Search for keywords (e.g., 'define', 'explain')..."
+                    onkeyup="filterResults()">
+            </div>
+        </div>
 
-// Download extracted content as TXT file
-function downloadText() {
-    if (!latestData || Object.keys(latestData).length === 0) {
-        alert("No data to download!");
-        return;
-    }
+        <p id="matchCount"></p>
+        <div id="results"></div>
+    </div>
 
-    let textContent = "";
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="loading-overlay">
+        <div class="spinner"></div>
+    </div>
 
-    for (const module in latestData) {
-        textContent += "==============================\n";
-        textContent += module + "\n";
-        textContent += "==============================\n\n";
-
-        latestData[module].forEach(entry => {
-            textContent += "From " + entry.paper + "\n\n";
-            textContent += entry.content + "\n\n";
-        });
-
-        textContent += "\n\n";
-    }
-
-    const blob = new Blob([textContent], { type: "text/plain" });
-    const url = URL.createObjectURL(blob);
-
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "HelpMePass_Output.txt";
-    a.click();
-
-    URL.revokeObjectURL(url);
-}
-
-// Extract marks/score from content (looks for numbers at line end)
-function getMarksFromContent(content) {
-    if (!content) return 0;
-
-    const lines = content.split("\n");
-    let maxMarks = 0;
-
-    lines.forEach(line => {
-        const match = line.trim().match(/\b(\d{1,2})\s*$/);
-        if (match) {
-            const value = parseInt(match[1]);
-            if (value > maxMarks && value <= 20) {
-                maxMarks = value;
-            }
-        }
-    });
-
-    return maxMarks;
-}
-
-// Escape special regex characters
-function escapeRegex(text) {
-    return text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-}
-
-// Search and highlight matching content
-function filterResults() {
-    const keyword = document.getElementById("searchBox").value.toLowerCase();
-    const modules = document.querySelectorAll(".module");
-    const matchDisplay = document.getElementById("matchCount");
-
-    let totalMatches = 0;
-
-    modules.forEach(module => {
-        const preBlocks = module.querySelectorAll("pre");
-        let moduleContainsMatch = false;
-
-        preBlocks.forEach(pre => {
-            const originalText = pre.textContent;
-            const lowerText = originalText.toLowerCase();
-
-            if (keyword && lowerText.includes(keyword)) {
-                moduleContainsMatch = true;
-
-                const safeKeyword = escapeRegex(keyword);
-                const regex = new RegExp(`(${safeKeyword})`, "gi");
-
-                const matches = originalText.match(regex);
-                if (matches) {
-                    totalMatches += matches.length;
-                }
-
-                pre.innerHTML = originalText.replace(
-                    regex,
-                    `<span style="background:#00ff88; color:black;">$1</span>`
-                );
-            } else {
-                pre.innerHTML = originalText;
-            }
-        });
-
-        module.style.display = moduleContainsMatch || keyword === "" ? "block" : "none";
-    });
-
-    if (keyword) {
-        matchDisplay.textContent = `🔎 ${totalMatches} matches found`;
-    } else {
-        matchDisplay.textContent = "";
-    }
-}
-
-
-
-
-</script>
+    <script src="/static/script.js"></script>
 
 </body>
+
 </html>
