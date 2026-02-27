@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HelpMePass v2 | JS</title>
+    
+    <link rel="stylesheet" href="css/style.css">
+
+    <!-- PDF.JS module-->
+    <script type="module" src="js/app.js"></script>
+</head>
+<body>
+    
+    <header>
+        <h1>&gt; HELPMEPASS V2 </h1>
+        <p>Let the Exam Panic Begin!</p>
+    </header>
+
+    <section class="controls">
+        <input type="file" multiple accept="application/pdf">
+        <button id="analyzeBtn">Analyze</button>
+        <input type="text" id="searchBox" placeholder="Search Keyword...">
+        <p id="matchCount"></p>
+    </section>
+
+    <main id="results"></main>
+
+    <script src="js/pdf.js"></script>
+    <script src="js/parser.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/app.js"></script>
+    
+</body>
+</html>
