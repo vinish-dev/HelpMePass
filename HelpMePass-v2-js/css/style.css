@@ -1,0 +1,42 @@
+body{
+    background: #0f1115;
+    color: #e5e5e5;
+    font-family: monospace;
+    margin: 0;
+    padding: 20px;
+}
+
+header h1 {
+    color: #00ff88;
+}
+
+.controls{
+    margin: 20px 0;
+}
+
+input, button {
+    padding: 8px;
+    margin-right: 8px;
+    background: #1c1f26;
+    color: white;
+    border: 1px solid #333;
+}
+
+button{
+    cursor: pointer;
+}
+
+.module {
+    margin-bottom: 20px;
+    border-top: 1px solid #333;
+    padding-top: 10px;
+}
+
+.priority-high {
+    color: #ff4d4d;
+}
+
+.priority-medium {
+    color: #ffaa00;
+}
+
