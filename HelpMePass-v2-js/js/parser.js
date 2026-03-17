@@ -4,18 +4,18 @@ export function extractModulesFromText(text) {
     const modules = {};
 
     //Split Part-B safely
-    const partSplit = text.split(/PART-B/i);
+    const partSplit = text.split(/PART\s*-\s*B/i);
     if (partSplit.length < 2) return modules;
 
     //select last part-b occurance 
-    const partB = partSplit[partSplit.length - 1];
+    const partB = text;
 
     //module regex
     const moduleRegex = /(Module\s*[-–]?\s*\d+)([\s\S]*?)(?=Module\s*[-–]?\s*\d+|$)/gi;
-
+console.log("MODULES FOUND:", modules);
     let match;
     //temp: search  
-    while ((match = moduleRegex.exec(partB)) !== null){
+    while ((match = moduleRegex.exec(partB)) !== null) {
         const moduleName = match[1].trim();
         const content = cleanText(match[2])
         modules[moduleName] = content;
@@ -24,9 +24,11 @@ export function extractModulesFromText(text) {
     return modules;
 }
 
-function cleanText(text){
+function cleanText(text) {
     return text
-        .replace(/\n\s*\n+/g,"\n")
-        .replace(/\Mar\b/gi, "")
+        .replace(/\s{2,}/g, " ")
+        .replace(/(OR)/g, "\n$1\n")
+        .replace(/(\d+\s+[ab]\))/g, "\n$1")
+        .replace(/\n\s+/g, "\n")
         .trim();
 }
