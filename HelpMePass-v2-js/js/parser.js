@@ -12,7 +12,7 @@ export function extractModulesFromText(text) {
 
     //module regex
     const moduleRegex = /(Module\s*[-–]?\s*\d+)([\s\S]*?)(?=Module\s*[-–]?\s*\d+|$)/gi;
-console.log("MODULES FOUND:", modules);
+    console.log("MODULES FOUND:", modules);
     let match;
     //temp: search  
     while ((match = moduleRegex.exec(partB)) !== null) {
@@ -30,5 +30,8 @@ function cleanText(text) {
         .replace(/(OR)/g, "\n$1\n")
         .replace(/(\d+\s+[ab]\))/g, "\n$1")
         .replace(/\n\s+/g, "\n")
+        .replace(/\d+\s*\|\s*\d+\s*Page?/gi, "")
+        .replace(/\b\d+\s*BFE\s*\d+/gi, "")
+        .replace(/Q\.No.*Marks/gi, "")
         .trim();
 }
