@@ -4,6 +4,9 @@ import { renderResults } from "./ui.js";
 
 pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/5.4.149/pdf.worker.min.mjs";
 
+
+let allModules = {};
+
 document.addEventListener("DOMContentLoaded", () => {
     const analyzeBtn = document.getElementById("analyzeBtn");
     analyzeBtn.addEventListener("click", analyzeFiles);
@@ -18,9 +21,7 @@ document.addEventListener("DOMContentLoaded", () => {
             alert("Please Select PDF files first.");
             return;
         }
-
-        let allModules = {};
-
+        allModules = {};
         for (let file of files) {
             const text = await extractTextFromPDF(file);
             // console.log("RAW TEXT:", text.slice(0, 500)); debug 
@@ -84,5 +85,7 @@ function filterResults() {
         } else {
             module.style.display = "none";
         }
+        renderResults(allModules)
     });
 }
+

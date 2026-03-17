@@ -4,10 +4,11 @@ body{
     font-family: monospace;
     margin: 0;
     padding: 20px;
+    font-size: 18px;
 }
 
 header h1 {
-    color: #00ff88;
+    color: #00ff41;
 }
 
 .controls{
@@ -40,3 +41,42 @@ button{
     color: #ffaa00;
 }
 
+.highlight{
+    background: #00ff41;
+    color: black;
+    padding: 0px 2px;
+    border-radius: 3px;
+}
+
+.module{
+    border-left: 3px sloid #00ff41;
+    padding-left: 12px;
+}
+
+.module h2{
+    color: #00ff41;
+    font-weight: bold;
+    font-size: 24px;
+}
+.module h4{
+    color: #9aa4b2;
+    font-size: 14px;
+    font-size: 16px;
+}
+.module pre{
+    padding: 8px;
+    background: #171b25;
+    border: 1px solid #1e293b;
+    font-size: 18px;
+}
+
+.or{
+    color: #facc15;
+    font-weight: bold;
+}
+#matchCount{
+    margin: 15px 0;
+    font-weight: bold;
+    font-size: 16px;
+    color: #00ff41;
+}
