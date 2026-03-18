@@ -72,6 +72,15 @@ button{
     font-size: 18px;
 }
 
+.module summary{
+    font-family: monospace;
+    /* font-size: 22px; */
+    /* font-weight: bold; */
+    color: #ff003c;
+    cursor: pointer;
+    margin-top: 25px;
+}
+
 .or{
     color: #facc15;
     font-weight: bold;
@@ -105,4 +114,9 @@ button{
     font-size: 18px;
     line-height: 1.8;
     margin-bottom: 8px;
+}
+
+body{
+    max-width: 900px;
+    margin: auto;
 }
