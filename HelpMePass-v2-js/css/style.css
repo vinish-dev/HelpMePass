@@ -1,7 +1,7 @@
 body{
     background: #0f1115;
     color: #e5e5e5;
-    font-family: monospace;
+    font-family: 'Inter',sans-serif;
     margin: 0;
     padding: 20px;
     font-size: 18px;
@@ -9,6 +9,7 @@ body{
 
 header h1 {
     color: #00ff41;
+    font-family: monospace;
 }
 
 .controls{
@@ -55,8 +56,9 @@ button{
 
 .module h2{
     color: #00ff41;
+    font-family: monospace;
     font-weight: bold;
-    font-size: 24px;
+    font-size: 26px;
 }
 .module h4{
     color: #9aa4b2;
