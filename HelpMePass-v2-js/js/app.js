@@ -73,7 +73,11 @@ console.log("PDF.js loaded successfully")
 
 
 function filterResults() {
+    renderResults(allModules)
     const keyword = document.getElementById("searchBox").value.toLowerCase();
+
+    if (!keyword) return;
+
     const modules = document.querySelectorAll(".module");
 
     modules.forEach(module => {
@@ -81,11 +85,9 @@ function filterResults() {
 
         if (text.includes(keyword)) {
             module.style.display = "block";
-
         } else {
             module.style.display = "none";
         }
-        renderResults(allModules)
     });
 }
 

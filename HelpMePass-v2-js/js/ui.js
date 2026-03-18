@@ -18,7 +18,7 @@ export function renderResults(data) {
         details.open = true;
 
         const summary = document.createElement("summary");
-        summary.textContent = moduleName;
+        summary.textContent = "View Questions";
 
         details.appendChild(summary);
         moduleDiv.appendChild(details);
@@ -30,7 +30,6 @@ export function renderResults(data) {
             details.appendChild(paperTitle);
 
             const pre = document.createElement("pre");
-            // pre.textContent = entry.content; //old 
             const keyword = document.getElementById("searchBox").value;
             pre.innerHTML = formatContent(heighlightKeyword(entry.content, keyword));
             details.appendChild(pre);
@@ -38,7 +37,11 @@ export function renderResults(data) {
 
         resultdiv.appendChild(moduleDiv);
     }
-    document.getElementById("matchCount").textContent = `🔎 Matches found: ${matchCounter}`;
+    if (!document.getElementById("searchBox").value) {
+        document.getElementById("matchCount").textContent = " ";
+    } else {
+        document.getElementById("matchCount").textContent = `🔎 Matches found: ${matchCounter}`;
+    }
 }
 
 function heighlightKeyword(text, keyword) {
