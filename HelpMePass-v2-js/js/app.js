@@ -33,7 +33,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 allModules[moduleName].push({
                     paper: file.name,
-                    content: modules[moduleName]
+                    content: modules[moduleName],
+                    file:file
                 });
             }
         }
