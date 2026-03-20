@@ -118,6 +118,22 @@ input[type="text"]{
     gap: 6px;
 }
 
+.view-btn{
+    background: #111827;
+    color: #01d236;
+    border: 1px solid #00ff41;
+    padding: 4px 10px;
+    margin: 6px 0;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 12px;
+}
+
+.view-btn:hover{
+    background: rgba(57,211,83,0.2);
+    color: #00ff41;
+}
+
 .priority-badge {
     font-size: 12px;
     font-weight: 700;

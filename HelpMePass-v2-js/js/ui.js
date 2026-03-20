@@ -57,8 +57,23 @@ export function renderResults(data) {
             cardHeader.innerHTML = `
                 <span class="priority-badge ${priorityClass}">${priorityLabel ?`[${priorityLabel}]` : ""}</span> <span class="paper-name">${entry.paper}</span>
                 `;
-            card.appendChild(cardHeader);
 
+            const viewBtn = document.createElement("button");
+            viewBtn.textContent = "View PDF";
+            viewBtn.className = "view-btn";
+
+            viewBtn.onclick = () =>{
+                if (entry.file) {
+                    const url = URL.createObjectURL(entry.file);
+                    window.open(url,"_blank");
+                } else{
+                    alert("PDF not available");
+                }
+            };
+            
+            cardHeader.appendChild(viewBtn);
+            card.appendChild(cardHeader);
+            
             const contentDiv = document.createElement("div");
             contentDiv.className = "card-content";
 
