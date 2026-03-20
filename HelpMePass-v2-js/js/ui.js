@@ -52,28 +52,39 @@ export function renderResults(data) {
             const card = document.createElement("div");
             card.className = "paper-card";
 
-            const cardHeader = document.createElement("div")
+            const cardHeader = document.createElement("div");
             cardHeader.className = "card-header";
-            cardHeader.innerHTML = `
-                <span class="priority-badge ${priorityClass}">${priorityLabel ?`[${priorityLabel}]` : ""}</span> <span class="paper-name">${entry.paper}</span>
-                `;
+            
+            const leftGroup = document.createElement("span");
+            leftGroup.className = `priority-badge ${priorityClass}`;
+            leftGroup.textContent = priorityLabel ? `[${priorityLabel}]` : "";
+
+            const rightGroup = document.createElement("div");
+            rightGroup.className = "card-header-right";
+
+            const paperName = document.createElement("span");
+            paperName.className = "paper-name";
+            paperName.textContent = entry.paper;
 
             const viewBtn = document.createElement("button");
             viewBtn.textContent = "View PDF";
             viewBtn.className = "view-btn";
 
-            viewBtn.onclick = () =>{
+            viewBtn.onclick = () => {
                 if (entry.file) {
                     const url = URL.createObjectURL(entry.file);
-                    window.open(url,"_blank");
+                    window.open(url, "_blank");
                 } else{
                     alert("PDF not available");
                 }
             };
             
-            cardHeader.appendChild(viewBtn);
+            rightGroup.appendChild(paperName);
+            rightGroup.appendChild(viewBtn);
+            cardHeader.appendChild(leftGroup);
+            cardHeader.appendChild(rightGroup);
             card.appendChild(cardHeader);
-            
+
             const contentDiv = document.createElement("div");
             contentDiv.className = "card-content";
 

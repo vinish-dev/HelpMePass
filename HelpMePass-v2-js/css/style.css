@@ -122,16 +122,24 @@ input[type="text"]{
     background: #111827;
     color: #01d236;
     border: 1px solid #00ff41;
-    padding: 4px 10px;
-    margin: 6px 0;
+    padding: 3px 10px;
     border-radius: 4px;
     cursor: pointer;
-    font-size: 12px;
+    font-size: 11px;
+    flex-shrink: 0;
+    margin-left: 10px;
 }
 
 .view-btn:hover{
     background: rgba(57,211,83,0.2);
     color: #00ff41;
+}
+.card-header-right{
+   display: flex;
+   align-items: center;
+   gap: 0;
+   flex-shrink: 1;
+   min-width: 0; 
 }
 
 .priority-badge {
