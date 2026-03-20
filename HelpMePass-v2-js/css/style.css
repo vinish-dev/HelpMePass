@@ -1,3 +1,7 @@
+*{
+    box-sizing: border-box;
+}
+
 body{
     background: #0f1115;
     color: #e5e5e5;
@@ -5,41 +9,130 @@ body{
     margin: 0;
     padding: 20px;
     font-size: 18px;
+    max-width: 900px;
+    margin: auto;
+}
+header{
+    border-bottom: 1px solid #21262d;
+    padding-bottom: 16px;
+    margin-bottom: 20px;
 }
 
 header h1 {
     color: #00ff41;
     font-family: monospace;
+    font-size: 24px;
+    font-weight: 700;
+    margin: 0 0 4px 0;
+    letter-spacing: 1px;
 }
 
+header p{
+    color: #8b949e;
+    margin: 0;
+    font-size: 13px;
+}
 .controls{
-    margin: 20px 0;
+    display: flex;
+    gap: 8px;
+    margin: 16px 0px;
+    flex-wrap: wrap;
+    align-items: center;
 }
-
-input, button {
-    padding: 8px;
-    margin-right: 8px;
-    background: #1c1f26;
-    color: white;
-    border: 1px solid #333;
-}
-
+input[type="file"],
+input[type="text"],
 button{
-    cursor: pointer;
+    font-family: monospace, sans-serif;
+    font-size: 13px;
+    padding: 6px 12px;
+    background: #161b22;
+    color: #c9d1d9;
+    border: 1px solid #30363d;
+    border-radius: 4px;
 }
 
+button {
+    cursor: pointer;
+    color: #00ff41;
+    border-color: #00ff41;
+    font-weight: 600;
+}
+button:hover{
+    background: #1a2a1a;
+}
+input[type="text"]{
+    flex: 1;
+    min-width: 160;
+}
+
+#matchCount{
+    margin: 15px 0;
+    font-weight: bold;
+    font-size: 14px;
+    color: #00ff41;
+}
+
+/* ── Module ── */
 .module {
-    margin-bottom: 20px;
-    border-top: 1px solid #333;
-    padding-top: 10px;
+    margin-bottom: 24px;
+}
+.module-header{
+    font-size: 15px;
+    font-weight: 700;
+    color: #8b949e;
+    padding: 8px 0;
+    cursor: pointer;
+    user-select: none;
+    letter-spacing: 0.5px;
+    border-bottom: 1px solid #21262d;
+    margin-bottom: 12px;
+}
+.module-toggle {
+    color: #8b949e;
+}
+.module-title {
+    color: #00ff41;
+    margin-left: 4px;
+}
+
+.module-header:hover .module-title {
+    color: #56e268;
+}
+
+.paper-card {
+    background: #161b22;
+    border: 1px solid #30363d;
+    border-radius: 6px;
+    margin-bottom: 14px;
+    overflow: hidden;
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 14px;
+    border-bottom: 1px solid #21262d;
+    background: #0d1117;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.priority-badge {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
 }
 
 .priority-high {
-    color: #ff4d4d;
+    color: #f85149;
 }
 
 .priority-medium {
-    color: #ffaa00;
+    color: #d29922;
+}
+.priority-low {
+    color: #8b949e;
 }
 
 .highlight{
@@ -49,47 +142,42 @@ button{
     border-radius: 3px;
 }
 
-.module{
-    border-left: 3px sloid #00ff41;
-    padding-left: 12px;
+.paper-name{
+    color:#8b949e;
+    font-size: 11px;
+    text-align: right;
+    flex-shrink: 0;
 }
 
-.module h2{
+/* ── Card content ── */
+.card-content{
+    padding: 12px 16px;
+    line-height: 1.7;
+}
+.card-content p{
+    margin: 0 0 4px 0;
+    font-size: 13px;
+    color:#c9d1d9;
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+.card-content p:last-child {
+    margin-bottom: 0;
+}
+
+.or-line{
+    color: #8b949e;
+    font-size: 12px;
+    font-weight: 600;
+    margin: 8px 0;
+}
+/* ── Keyword highlight ── */
+.highlight {
+    background: rgba(57,211,83,0.2);
     color: #00ff41;
-    font-family: monospace;
-    font-weight: bold;
-    font-size: 26px;
-}
-.module h4{
-    color: #9aa4b2;
-    font-size: 14px;
-    font-size: 16px;
-}
-.module pre{
-    padding: 8px;
-    background: #171b25;
-    border: 1px solid #1e293b;
-    font-size: 18px;
-}
-
-.module summary{
-    font-family: monospace;
-    /* font-size: 22px; */
-    /* font-weight: bold; */
-    color: #ff003c;
-    cursor: pointer;
-    margin-top: 25px;
-}
-
-.or{
-    color: #facc15;
-    font-weight: bold;
-}
-#matchCount{
-    margin: 15px 0;
-    font-weight: bold;
-    font-size: 16px;
-    color: #00ff41;
+    border-radius: 2px;
+    padding: 0 2px;
 }
 
 .paper-card{
@@ -100,23 +188,13 @@ button{
     margin: 12px 0;
 }
 
-.paper-card:hover{
-    border-color:#00ff41;
+/* ── Marks highlight ── */
+.marks-container{
+    color: #8b949e;
+    font-size: 0.9em;
 }
 
-.paper-title{
-    color: #9ca3af;
-    font-size: 14px;
-    margin-bottom: 8px;
-}
-
-.question{
-    font-size: 18px;
-    line-height: 1.8;
-    margin-bottom: 8px;
-}
-
-body{
-    max-width: 900px;
-    margin: auto;
+.marks-highlight{
+    color: #00ff41;
+    font-weight: 700;
 }
