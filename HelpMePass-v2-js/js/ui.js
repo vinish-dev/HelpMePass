@@ -9,34 +9,79 @@ export function renderResults(data) {
         const moduleDiv = document.createElement("div");
         moduleDiv.className = "module";
 
-        const title = document.createElement("h2");
-        title.textContent = moduleName;
-        moduleDiv.appendChild(title);
+        //Module header: [-] Module-1
+        const moduleHeader = document.createElement("div");
+        moduleHeader.className = "module-header";
+        moduleHeader.innerHTML = `<span class="module-toggle">[-]</span> <span class="module-title">${moduleName.toUpperCase().replace("MODULE","MODULE-")}</span>`;
+        
 
-
-        const details = document.createElement("details");
-        details.open = true;
-
-        const summary = document.createElement("summary");
-        summary.textContent = "View Questions";
-
-        details.appendChild(summary);
-        moduleDiv.appendChild(details);
+        const moduleBody = document.createElement("div");
+        moduleBody.className = "module-body";
+        
+        moduleHeader.addEventListener("click", ()=>{
+            const isOpen = moduleBody.style.display !== "none";
+            moduleBody.style.display = isOpen ? "none": "block";
+            moduleHeader.querySelector(".module-toggle").textContent = isOpen ? "[+]" : "[-]";
+        });
+        
+        moduleDiv.appendChild(moduleHeader);
+        moduleDiv.appendChild(moduleBody);
 
 
         data[moduleName].forEach(entry => {
-            const paperTitle = document.createElement("h4")
-            paperTitle.textContent = `From ${entry.paper}`;
-            details.appendChild(paperTitle);
-
-            const pre = document.createElement("pre");
             const keyword = document.getElementById("searchBox").value;
-            pre.innerHTML = formatContent(heighlightKeyword(entry.content, keyword));
-            details.appendChild(pre);
+            const marksMatch = entry.content.match(/\d+\s*$/);
+            const marks = marksMatch ? parseInt(marksMatch[0].trim()): null;
+
+            let priorityLabel = "";
+            let priorityClass = "";
+            if (marks!==null) {
+                if (marks >= 8) {
+                    priorityLabel = `HIGH PRIORITY: ${marks}M`;
+                    priorityClass = "priority-high";
+                }else if(marks >= 5){
+                    priorityLabel = `${marks}M`;
+                    priorityClass = "priority-medium";
+
+                }
+                else{
+                    priorityLabel = `${marks}M`;
+                    priorityClass = "priority-low";
+                }
+            }
+            const card = document.createElement("div");
+            card.className = "paper-card";
+
+            const cardHeader = document.createElement("div")
+            cardHeader.className = "card-header";
+            cardHeader.innerHTML = `
+                <span class="priority-badge ${priorityClass}">${priorityLabel ?`[${priorityLabel}]` : ""}</span> <span class="paper-name">${entry.paper}</span>
+                `;
+            card.appendChild(cardHeader);
+
+            const contentDiv = document.createElement("div");
+            contentDiv.className = "card-content";
+
+            const lines = entry.content.split('\n').filter(line => line.trim()!=="");
+            lines.forEach(line => {
+                if(line.trim() === "OR"){
+                    const orLine = document.createElement("div");
+                    orLine.className = "OR";
+                    contentDiv.appendChild(orLine);
+                } else{
+                    const p = document.createElement("p");
+                    p.innerHTML = formatMarks(highlightKeyword(line, keyword));
+                    contentDiv.appendChild(p);
+                }
+            });
+
+            card.appendChild(contentDiv);
+            moduleBody.appendChild(card);
         });
 
         resultdiv.appendChild(moduleDiv);
     }
+
     if (!document.getElementById("searchBox").value) {
         document.getElementById("matchCount").textContent = " ";
     } else {
@@ -44,21 +89,42 @@ export function renderResults(data) {
     }
 }
 
-function heighlightKeyword(text, keyword) {
-
-    if (!keyword || keyword.trim() == "") return text; //don't highlight or count
-
+function highlightKeyword(text, keyword) {
+    if (!keyword || keyword.trim() === "") return text; //don't highlight or count
     const escapedKeyword = keyword.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
     const regex = new RegExp(`(${escapedKeyword})`, "gi");
-
     return text.replace(regex, (match) => {
         matchCounter++;
         return `<span class="highlight">${match}</span>`;
     });
 }
 
-function formatContent(text) {
-    return text
-        .replace(/OR/g, "<span class='or'>OR</span>")
-        .replace(/\n/g, "<br>");
+function formatMarks(text) {
+    // Parenthesized: (2 1 1,6 8)
+    let formatted = text.replace(/\(([\d\s,]+)\)/g, (match, inner) => {
+        const lastDigitMatch = inner.match(/(\d+)(?!.*\d)/);
+        if (lastDigitMatch) {
+            const lastDigit = lastDigitMatch[0];
+            const lastIndex = inner.lastIndexOf(lastDigit);
+            const before = inner.substring(0, lastIndex);
+            const after = inner.substring(lastIndex + lastDigit.length);
+            return `<span class="marks-container">(${before}<span class="marks-highlight">${lastDigit}</span>${after})</span>`;
+        }
+        return match;
+    });
+
+    // Unparenthesized at end: "L2 1 3 8" or "2 1 1,6 8"
+    formatted = formatted.replace(/\s+((?:(?:L|CO|PO|BL)?\s*\d+[\s,]*)+\d+)\s*$/i, (match, inner) => {
+        const lastDigitMatch = inner.match(/(\d+)(?!.*\d)/);
+        if (lastDigitMatch) {
+            const lastDigit = lastDigitMatch[0];
+            const lastIndex = inner.lastIndexOf(lastDigit);
+            const before = inner.substring(0, lastIndex);
+            const after = inner.substring(lastIndex + lastDigit.length);
+            return ` <span class="marks-container">${before}<span class="marks-highlight">${lastDigit}</span>${after}</span>`;
+        }
+        return match;
+    });
+
+    return formatted;
 }
