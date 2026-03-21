@@ -222,3 +222,15 @@ input[type="text"]{
     color: #00ff41;
     font-weight: 700;
 }
+.site-footer{
+    margin-top: 48px;
+    padding: 16px 0 8px 0;
+    border-top: 1px solid #21262d;
+    text-align: center;
+    font-size: 11px;
+    color: #3d444d;
+    letter-spacing: 0.5px;
+}
+.footer-sep{
+    color: #21262d;
+}
