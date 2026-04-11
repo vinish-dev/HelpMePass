@@ -11,6 +11,21 @@ document.addEventListener("DOMContentLoaded", () => {
     analyzeBtn.addEventListener("click", analyzeFiles);
     document.getElementById("searchBox").addEventListener("input", filterResults);
 
+    // Theme toogle
+    const themeBtn = document.getElementById("themeToggle");
+
+    // Restore saved preference
+    if (localStorage.getItem("theme") === "light") {
+        document.body.classList.add("light");
+        themeBtn.textContent = "🌙 Dark";
+    }
+
+    themeBtn.addEventListener("click", () => {
+        const isLight = document.body.classList.toggle("light");
+        themeBtn.textContent = isLight ? "Dark" : "☀️ Light"
+        localStorage.setItem("theme", isLight ? "light" : "dark");
+    });
+
 
     async function analyzeFiles() {
         const input = document.getElementById("files");
@@ -33,7 +48,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 allModules[moduleName].push({
                     paper: file.name,
                     content: modules[moduleName],
-                    file:file
+                    file: file
                 });
             }
         }
