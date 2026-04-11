@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,17 +8,25 @@
     <title>HelpMePass v2 | JS</title>
     <link rel="stylesheet" href="HelpMePass-v2-js/assets/css/style.css">
 </head>
+
 <body>
-    
+
     <header>
-        <h1>&gt; HELPMEPASS v2</h1>
-        <p>&ensp;Let the Exam Panic Begin!</p>
+        <div class="header-text">
+            <h1>&gt; HELPMEPASS v2</h1>
+            <p>&ensp;Let the Exam Panic Begin!</p>
+        </div>
+        <button id="themeToggle" title="Toggle theme">☀ Light</button>
     </header>
 
     <section class="controls">
         <input type="file" id="files" multiple accept="application/pdf">
         <button id="analyzeBtn">Analyze</button>
         <input type="text" id="searchBox" placeholder="Search Keyword...">
+        <a href="https://drive.google.com/drive/folders/1TJ5JM7Wp2nsZVupXjMFe79AqyBbaTE_a" target="_blank"
+            rel="noopener noreferer" id="qpDriveBtn" class="qp-drive-btn">
+            📂 QP Drive
+        </a>
     </section>
     <div id="matchCount"></div>
     <main id="results"></main>
@@ -30,4 +39,5 @@
     </footer>
 
 </body>
+
 </html>
