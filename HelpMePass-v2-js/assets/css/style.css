@@ -273,6 +273,39 @@ input[type="text"] { flex: 1; min-width: 160px; }
 
 .card-content p:last-child { margin-bottom: 0; }
 
+.question-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin: 0 0 4px 0;
+}
+
+.question-row:last-child { margin-bottom: 0; }
+
+.question-text {
+    flex: 1;
+    font-size: 13px;
+    color: var(--text-card);
+    white-space: pre-wrap;
+    word-break: break-word;
+    line-height: 1.7;
+}
+
+.question-row.completed .question-text {
+    text-decoration: line-through;
+    opacity: 0.55;
+    color: var(--text-muted);
+}
+
+.question-done {
+    flex-shrink: 0;
+    margin-top: 4px;
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+    accent-color: var(--accent);
+}
+
 .or-line {
     color: var(--text-muted);
     font-size: 12px;

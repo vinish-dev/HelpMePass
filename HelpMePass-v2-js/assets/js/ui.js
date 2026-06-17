@@ -1,7 +1,24 @@
 let matchCounter = 0;
+const COMPLETED_KEY = "helpmepass_completed";
+
+function getCompletedSet() {
+    try {
+        return new Set(JSON.parse(localStorage.getItem(COMPLETED_KEY) || "[]"));
+    } catch {
+        return new Set();
+    }
+}
+
+function setQuestionCompleted(key, done) {
+    const set = getCompletedSet();
+    if (done) set.add(key);
+    else set.delete(key);
+    localStorage.setItem(COMPLETED_KEY, JSON.stringify([...set]));
+}
 
 export function renderResults(data) {
     matchCounter = 0;
+    const completedQuestions = getCompletedSet();
     const resultdiv = document.getElementById("results");
     resultdiv.innerHTML = "";
 
@@ -94,10 +111,31 @@ export function renderResults(data) {
                     const orLine = document.createElement("div");
                     orLine.className = "OR";
                     contentDiv.appendChild(orLine);
-                } else{
-                    const p = document.createElement("p");
-                    p.innerHTML = formatMarks(highlightKeyword(line, keyword));
-                    contentDiv.appendChild(p);
+                } else {
+                    const questionKey = `${moduleName}|${entry.paper}|${line.trim()}`;
+                    const row = document.createElement("div");
+                    row.className = "question-row";
+                    if (completedQuestions.has(questionKey)) {
+                        row.classList.add("completed");
+                    }
+
+                    const textSpan = document.createElement("span");
+                    textSpan.className = "question-text";
+                    textSpan.innerHTML = formatMarks(highlightKeyword(line, keyword));
+
+                    const checkbox = document.createElement("input");
+                    checkbox.type = "checkbox";
+                    checkbox.className = "question-done";
+                    checkbox.checked = completedQuestions.has(questionKey);
+                    checkbox.title = "Mark as done";
+                    checkbox.addEventListener("change", () => {
+                        row.classList.toggle("completed", checkbox.checked);
+                        setQuestionCompleted(questionKey, checkbox.checked);
+                    });
+
+                    row.appendChild(textSpan);
+                    row.appendChild(checkbox);
+                    contentDiv.appendChild(row);
                 }
             });
 
